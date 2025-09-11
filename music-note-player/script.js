@@ -144,7 +144,7 @@ function playRandomSequence() {
       }
     }, delay);
 
-    // Add some randomness to the timing between notes
+    // Add some randomness to the timing between notes.
     delay += duration + Math.random() * 200 + 100;
   }
 }
