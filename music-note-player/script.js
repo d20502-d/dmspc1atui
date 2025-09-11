@@ -85,8 +85,89 @@ function playNote(note) {
 // Track active notes
 const activeNotes = new Map();
 
+// All available notes in order from C4 to C6
+const allNotes = [
+  "C4",
+  "D4",
+  "E4",
+  "F4",
+  "G4",
+  "A4",
+  "B4",
+  "C5",
+  "D5",
+  "E5",
+  "F5",
+  "G5",
+  "A5",
+  "B5",
+  "C6",
+];
+
+// Play a random sequence of notes
+function playRandomSequence() {
+  // Stop any currently playing notes
+  stopAllNotes();
+
+  // Get random number of notes (between 3 and 7)
+  const numNotes = Math.floor(Math.random() * 5) + 3;
+  let delay = 0;
+
+  // Play each note with a slight delay
+  for (let i = 0; i < numNotes; i++) {
+    // Random note from the scale
+    const noteIndex = Math.floor(Math.random() * allNotes.length);
+    const note = allNotes[noteIndex];
+
+    // Random duration between 200ms and 600ms
+    const duration = Math.random() * 400 + 200;
+
+    // Schedule the note
+    setTimeout(() => {
+      const keyElement = document.querySelector(`.key[data-note="${note}"]`);
+      if (keyElement) {
+        // Visual feedback
+        keyElement.classList.add("active");
+
+        // Play the note
+        const stopNote = playNote(note);
+        if (stopNote) {
+          activeNotes.set(keyElement, stopNote);
+
+          // Stop the note after duration
+          setTimeout(() => {
+            stopNote();
+            activeNotes.delete(keyElement);
+            keyElement.classList.remove("active");
+          }, duration);
+        }
+      }
+    }, delay);
+
+    // Add some randomness to the timing between notes
+    delay += duration + Math.random() * 200 + 100;
+  }
+}
+
+// Stop all currently playing notes
+function stopAllNotes() {
+  activeNotes.forEach((stopNote, keyElement) => {
+    stopNote();
+    keyElement.classList.remove("active");
+  });
+  activeNotes.clear();
+}
+
 // Initialize the application
 document.addEventListener("DOMContentLoaded", () => {
+  // Add event listener for Surprise Me button
+  const surpriseBtn = document.getElementById("surpriseMe");
+  if (surpriseBtn) {
+    surpriseBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      playRandomSequence();
+    });
+  }
   // Initialize audio on first interaction
   const initOnInteraction = () => {
     initAudio();
@@ -96,6 +177,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.addEventListener("click", initOnInteraction, { once: true });
   document.addEventListener("keydown", initOnInteraction, { once: true });
+
+  // Initialize settings before adding labels
+  initSettings();
   // Set up event listeners for all keys
   const keys = document.querySelectorAll(".key");
   keys.forEach((key) => {
@@ -170,7 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize settings
   initSettings();
 
-  // Add note labels and keyboard shortcuts
+  // Add note labels and keyboard shortcuts (visibility will be controlled by settings)
   addNoteLabels();
 
   // Set up settings panel toggle

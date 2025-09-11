@@ -165,6 +165,37 @@ h1 {
   opacity: 1;
 }
 
+/* Controls */
+.controls {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+
+.surprise-btn {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  transition: all 0.3s ease;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.surprise-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+.surprise-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 10px rgba(255, 107, 107, 0.3);
+}
+
 /* Instructions */
 .instructions {
   margin-top: 2rem;
