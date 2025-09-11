@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Musical Note Player</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Settings Button -->
+    <button id="settingsBtn" class="settings-btn" aria-label="Settings">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <path
+          fill="currentColor"
+          d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.35,5.27L2.35,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"
+        />
+      </svg>
+    </button>
+
+    <!-- Settings Panel -->
+    <div id="settingsPanel" class="settings-panel">
+      <div class="settings-header">
+        <h3>Settings</h3>
+        <button id="closeSettings" class="close-btn">&times;</button>
+      </div>
+      <div class="settings-content">
+        <div class="setting-item">
+          <span>Show Note Names</span>
+          <label class="switch">
+            <input type="checkbox" id="showNoteNames" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <span>Show Keyboard Shortcuts</span>
+          <label class="switch">
+            <input type="checkbox" id="showKeyboardShortcuts" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <span>Metronome</span>
+          <label class="switch">
+            <input type="checkbox" id="enableMetronome" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div
+          class="metronome-controls"
+          id="metronomeControls"
+          style="display: none"
+        >
+          <div class="bpm-control">
+            <label for="bpm">BPM: <span id="bpmValue">120</span></label>
+            <input
+              type="range"
+              id="bpm"
+              min="40"
+              max="208"
+              value="120"
+              class="bpm-slider"
+            />
+          </div>
+          <div class="time-signature">
+            <label>Time Signature:</label>
+            <select id="timeSignature">
+              <option value="4">4/4</option>
+              <option value="3">3/4</option>
+              <option value="6">6/8</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <h1>Musical Note Player</h1>
+      <div class="keyboard">
+        <!-- First row (C4 to G4) -->
+        <button class="key octave-start" data-note="C4"></button>
+        <button class="key" data-note="D4"></button>
+        <button class="key" data-note="E4"></button>
+        <button class="key" data-note="F4"></button>
+        <button class="key" data-note="G4"></button>
+
+        <!-- Second row (A4 to E5) -->
+        <button class="key" data-note="A4"></button>
+        <button class="key" data-note="B4"></button>
+        <button class="key octave-start" data-note="C5"></button>
+        <button class="key" data-note="D5"></button>
+        <button class="key" data-note="E5"></button>
+
+        <!-- Third row (F5 to C6) -->
+        <button class="key" data-note="F5"></button>
+        <button class="key" data-note="G5"></button>
+        <button class="key" data-note="A5"></button>
+        <button class="key" data-note="B5"></button>
+        <button class="key octave-start" data-note="C6"></button>
+      </div>
+
+      <div class="instructions">
+        <p>Click the buttons or use your keyboard to play notes.</p>
+        <p>
+          Click the <i class="settings-icon">⚙️</i> or use <kbd>⇧</kbd> +
+          <kbd>S</kbd> to open settings.
+        </p>
+        <p>Octave starts are marked with a diamond border.</p>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
