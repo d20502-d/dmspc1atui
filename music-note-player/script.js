@@ -235,10 +235,10 @@ function initSettings() {
   const bpmSlider = document.getElementById("bpm");
   const bpmValue = document.getElementById("bpmValue");
 
-  // Load saved settings or use defaults
+  // Load saved settings or use defaults (all off by default)
   const settings = JSON.parse(localStorage.getItem("pianoSettings")) || {
-    showNoteNames: true,
-    showKeyboardShortcuts: true,
+    showNoteNames: false,
+    showKeyboardShortcuts: false,
     enableMetronome: false,
     bpm: 120,
     timeSignature: "4",
