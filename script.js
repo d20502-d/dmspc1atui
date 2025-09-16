@@ -319,7 +319,7 @@ function initSettings() {
   const bpmSlider = document.getElementById("bpm");
   const bpmValue = document.getElementById("bpmValue");
 
-  // Load saved settings or use defaults (all off by default)
+  // Load saved settings or use defaults
   const settings = JSON.parse(localStorage.getItem("pianoSettings")) || {
     showNoteNames: true,
     showKeyboardShortcuts: true,
