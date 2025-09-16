@@ -321,8 +321,8 @@ function initSettings() {
 
   // Load saved settings or use defaults (all off by default)
   const settings = JSON.parse(localStorage.getItem("pianoSettings")) || {
-    showNoteNames: false,
-    showKeyboardShortcuts: false,
+    showNoteNames: true,
+    showKeyboardShortcuts: true,
     enableMetronome: false,
     bpm: 120,
     timeSignature: "4",
