@@ -6,7 +6,7 @@
 }
 
 body {
-  font-family: "Segoe UI", Tahoma, Verdana, sans-serif, Times;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   color: #fff;
   min-height: 100vh;
@@ -486,26 +486,4 @@ input:checked + .slider:before {
   .settings-panel.active {
     right: 5%;
   }
-}
-
-/* Footer */
-footer {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 0.5rem;
-  width: 100%;
-  bottom: 0;
-  position: fixed;
-  padding: 10px 20px;
-}
-footer a {
-  color: #0098db;
-}
-footer a:visited {
-  color: #1e579c;
-}
-footer a:active {
-  color: #6ed0d5;
 }
