@@ -288,7 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Close settings when clicking outside
-    document.addEventListener("click", (e) => {
+    /* document.addEventListener("click", (e) => {
       if (
         settingsPanel.classList.contains("active") &&
         !settingsPanel.contains(e.target) &&
@@ -296,7 +296,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ) {
         closeSettingsPanel();
       }
-    });
+    }); */
 
     // Close settings when pressing Escape key
     document.addEventListener("keydown", (e) => {
