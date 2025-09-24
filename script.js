@@ -305,6 +305,81 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  // Theme toggle setup
+  const themeBtn = document.getElementById("themeBtn");
+  const themeIcon = document.getElementById("themeIcon");
+
+  function updateThemeIcon(isLight) {
+    console.log(isLight);
+    if (!themeIcon) {
+      console.error("themeIcon element not found");
+      return;
+    }
+    if (isLight) {
+      //sun
+      themeIcon.src =
+        "https://img.icons8.com/sf-regular-filled/48/FFFFFF/sun.png";
+      themeIcon.width = 26;
+      themeIcon.height = 26;
+      themeIcon.alt = "light";
+    } else {
+      //moon
+      themeIcon.src =
+        "https://img.icons8.com/ios-filled/50/FFFFFF/do-not-disturb-2.png";
+      themeIcon.width = 22;
+      themeIcon.height = 22;
+      themeIcon.alt = "dark";
+    }
+  }
+
+  function setTheme(theme) {
+    const isLight = theme === "light";
+    document.body.classList.toggle("light-theme", isLight);
+    localStorage.setItem("theme", isLight ? "light" : "dark");
+    updateThemeIcon(isLight);
+  }
+
+  // Initialize theme: default to dark (current design), honor saved preference
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "light") {
+    setTheme("light");
+  } else {
+    setTheme("dark");
+  }
+
+  if (themeBtn) {
+    themeBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const isLight = document.body.classList.contains("light-theme");
+      setTheme(isLight ? "dark" : "light");
+    });
+  }
+
+  // Theme toggle function
+  function setTheme(theme) {
+    document.body.classList.remove("light-theme", "dark-theme"); // Remove existing theme classes
+    document.body.classList.add(`${theme}-theme`); // Add new theme class
+    localStorage.setItem("theme", theme); // Save theme to localStorage
+    currentTheme = theme; // Update currentTheme
+    updateThemeIcon(theme === "light"); // Update icon
+  }
+
+  // Hover effect: Switch to sun image on hover, revert on mouseout
+  themeBtn.addEventListener("mouseenter", () => {
+    console.log("enter");
+    if (currentTheme === "light")
+      updateThemeIcon(false); // Show sun image on hover
+    else updateThemeIcon(true);
+    //if (savedTheme === "dark") updateThemeIcon(true); // Show sun image on hover
+  });
+  themeBtn.addEventListener("mouseleave", () => {
+    console.log("leave");
+    if (currentTheme === "light")
+      updateThemeIcon(true); // Show sun image on hover
+    else updateThemeIcon(false);
+    //if (savedTheme === "dark") updateThemeIcon(false); // Show sun image on hover
+  });
 });
 
 // Initialize settings and event listeners

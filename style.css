@@ -313,7 +313,34 @@ h1 {
 
 .settings-btn:hover {
   background: rgba(255, 255, 255, 0.2);
-  transform: rotate(30deg);
+  transform: scale(1.05) rotate(30deg);
+}
+
+/* Theme Toggle Button (placed at the left of settings button) */
+.theme-btn {
+  position: fixed;
+  top: 20px;
+  right: 70px; /* to the left of settings */
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+  box-shadow: inset 3px 3px 2px 0 rgba(0, 0, 0, 0.2),
+    inset -2px -2px 2px 0 rgba(255, 255, 255, 0.5);
+}
+
+.theme-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05) rotate(30deg);
 }
 
 /* Settings Panel */
@@ -502,6 +529,147 @@ input:checked + .slider:before {
   min-width: auto;
   text-align: center;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+/* Light Theme */
+body.light-theme {
+  background: linear-gradient(135deg, #c494e6 0%, #df9d47 100%);
+  color: #fff;
+  background-color: #fff;
+}
+
+body.light-theme .container h1,
+body.light-theme h1 {
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .keyboard {
+  background: rgba(0, 0, 0, 0.05);
+  box-shadow: -5px -5px 9px 0 rgba(0, 0, 0, 0.2),
+    2px 2px 9px 0 rgba(255, 255, 255, 0.5),
+    inset 2px 2px 500px 0 rgba(58, 58, 58, 0.1);
+}
+
+body.light-theme .key {
+  background: rgba(255, 255, 255, 0.12);
+  color: #111;
+  box-shadow: inset 6px 6px 9px 0 rgba(0, 0, 0, 0.2),
+    inset -3px -3px 9px 0 rgba(255, 255, 255, 0.5);
+}
+
+body.light-theme .key:hover {
+  background: rgba(0, 0, 0, 0.05);
+  background-color: rgba(255, 242, 239, 0.349);
+  transform: translateY(-3px);
+  box-shadow: inset 6px 6px 9px 0 rgba(0, 0, 0, 0.2),
+    inset -3px -3px 15px 0 rgba(255, 255, 255, 0.5);
+}
+
+body.light-theme .key:active,
+body.light-theme .key.active {
+  background: rgba(169, 131, 160, 0.2);
+  background-color: rgba(157, 133, 152, 0.944) !important;
+  box-shadow: 0 0 15px rgba(174, 136, 179, 0.3);
+}
+
+body.light-theme .key::before {
+  border-color: rgba(244, 220, 220, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  background: rgba(216, 225, 228, 0.299);
+}
+
+body.light-theme .key.octave-start {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+body.light-theme .key.octave-start::after {
+  border-color: #293e9d;
+  box-shadow: 0 0 12px rgba(107, 161, 255, 0.4);
+}
+
+body.light-theme .instructions {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+body.light-theme .settings-btn,
+body.light-theme .theme-toggle {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 3px 3px 2px 0 rgba(21, 21, 21, 0.2),
+    inset -2px -2px 2px 0 rgba(255, 255, 255, 0.5);
+}
+
+.settings-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05) rotate(30deg);
+}
+
+body.light-theme .settings-btn:hover,
+body.light-theme .theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+body.light-theme .settings-panel {
+  background: rgba(255, 255, 255, 0.103);
+  color: #fff;
+  border: 1px solid rgba(239, 231, 231, 0.1);
+  box-shadow: inset 3px 3px 4px 0 rgba(0, 0, 0, 0.2),
+    inset -2px -2px 4px 0 rgba(255, 255, 255, 0.5);
+}
+
+body.light-theme .settings-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .slider {
+  background-color: #e6e6f85e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 3px 3px 4px 0 rgba(0, 0, 0, 0.2),
+    inset -2px -2px 4px 0 rgba(255, 255, 255, 0.5);
+}
+
+input:checked + .slider {
+  background-color: #4cc9f0;
+}
+
+body.light-theme .instructions kbd {
+  background: rgba(210, 210, 210, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.405);
+  color: #fff;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+}
+
+body.light-theme .note-label {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+body.light-theme .keyboard-shortcut {
+  color: rgba(255, 255, 255, 0.6);
+  text-shadow: none;
+}
+
+body.light-theme .time-signature select {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  color: #fff;
+}
+
+body.light-theme .surprise-btn {
+  background: linear-gradient(135deg, #7a76fd 0%, hsl(235, 87%, 56%) 100%);
+  box-shadow: 0 4px 15px rgba(124, 107, 255, 0.3);
+  box-shadow: inset 6px 6px 9px 0 rgba(0, 0, 0, 0.2),
+    inset -3px -3px 9px 0 rgba(255, 255, 255, 0.5);
+}
+
+body.light-theme .surprise-btn:hover {
+  box-shadow: 0 6px 20px rgba(107, 119, 255, 0.4);
+  box-shadow: inset 6px 6px 9px 0 rgba(0, 0, 0, 0.2),
+    inset -3px -3px 50px 0 rgba(255, 255, 255, 0.5);
+}
+
+body.light-theme .surprise-btn:active {
+  box-shadow: 0 2px 10px rgba(107, 114, 255, 0.3);
 }
 
 /* Responsive adjustments */
