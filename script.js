@@ -1,5 +1,6 @@
 // Audio context and note map
 let audioContext;
+let currentInstrument = "piano"; // 'piano' | 'marimba'
 const noteMap = {
   C4: 0,
   D4: 1,
@@ -58,12 +59,46 @@ function playNote(note) {
   const frequency = frequencies[noteIndex];
 
   // Configure oscillator
-  oscillator.type = "sine";
-  oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+  //oscillator.type = "sine";
+  //oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
 
   // Configure gain for smooth envelope
-  gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-  gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.03);
+  //gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+  //gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.03);
+
+  //.............1 try
+  // Configure oscillator and envelope by instrument
+  //const now = audioContext.currentTime;
+  //oscillator.frequency.setValueAtTime(frequency, now);
+
+  //if (currentInstrument === "marimba") {
+  // Percussive, woody: short attack, fast decay
+  //oscillator.type = "triangle";
+  //gainNode.gain.setValueAtTime(0, now);
+  //gainNode.gain.linearRampToValueAtTime(0.6, now + 0.005); // very fast attack
+  //gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.25); // fast decay
+  //} else {
+  // Piano-like: gentle attack, medium decay
+  //oscillator.type = "sine";
+  //gainNode.gain.setValueAtTime(0, now);
+  //gainNode.gain.linearRampToValueAtTime(0.3, now + 0.03);
+  //}
+
+  // Configure oscillator and envelope by instrument
+  const now = audioContext.currentTime;
+  oscillator.frequency.setValueAtTime(frequency, now);
+
+  if (currentInstrument === "marimba") {
+    oscillator.type = "sine";
+    gainNode.gain.setValueAtTime(0, now); // Start at 0 gain
+    gainNode.gain.linearRampToValueAtTime(1.0, now + 0.005); // Fast attack (5ms)
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.505); // Decay to near-zero over 500ms
+  } else {
+    //Piano
+    oscillator.type = "sine";
+    gainNode.gain.setValueAtTime(0, now);
+    gainNode.gain.linearRampToValueAtTime(0.3, now + 0.03);
+  }
 
   // Connect nodes
   oscillator.connect(gainNode);
@@ -74,11 +109,17 @@ function playNote(note) {
 
   // Return stop function
   return () => {
-    gainNode.gain.cancelScheduledValues(audioContext.currentTime);
-    gainNode.gain.setValueAtTime(gainNode.gain.value, audioContext.currentTime);
-    gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.1);
+    //gainNode.gain.cancelScheduledValues(audioContext.currentTime);
+    //gainNode.gain.setValueAtTime(gainNode.gain.value, audioContext.currentTime);
+    //gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.1);
 
-    oscillator.stop(audioContext.currentTime + 0.1);
+    //oscillator.stop(audioContext.currentTime + 0.1);
+    const t = audioContext.currentTime;
+    gainNode.gain.cancelScheduledValues(t);
+    gainNode.gain.setValueAtTime(Math.max(gainNode.gain.value, 0.0001), t);
+    // Short release for both instruments
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, t + 0.08);
+    oscillator.stop(t + 0.09);
   };
 }
 
@@ -381,6 +422,45 @@ document.addEventListener("DOMContentLoaded", () => {
     //if (savedTheme === "dark") updateThemeIcon(false); // Show sun image on hover
   });
 });
+
+// Instrument toggle setup
+const pianoBtn = document.getElementById("instrumentPiano");
+const marimbaBtn = document.getElementById("instrumentMarimba");
+
+function updateInstrumentButtons() {
+  if (!pianoBtn || !marimbaBtn) return;
+  const isPiano = currentInstrument === "piano";
+  pianoBtn.classList.toggle("active", isPiano);
+  marimbaBtn.classList.toggle("active", !isPiano);
+  pianoBtn.setAttribute("aria-pressed", String(isPiano));
+  marimbaBtn.setAttribute("aria-pressed", String(!isPiano));
+}
+
+function setInstrument(instrument) {
+  currentInstrument = instrument;
+  localStorage.setItem("instrument", instrument);
+  updateInstrumentButtons();
+}
+
+// Load saved instrument (default piano)
+const savedInstrument = localStorage.getItem("instrument");
+if (savedInstrument === "marimba" || savedInstrument === "piano") {
+  currentInstrument = savedInstrument;
+}
+updateInstrumentButtons();
+
+if (pianoBtn) {
+  pianoBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    setInstrument("piano");
+  });
+}
+if (marimbaBtn) {
+  marimbaBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    setInstrument("marimba");
+  });
+}
 
 // Initialize settings and event listeners
 function initSettings() {

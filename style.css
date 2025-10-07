@@ -5,6 +5,43 @@
   box-sizing: border-box;
 }
 
+/* Instrument Button (Top-Left) */
+.instrument-btn-group {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 1000;
+}
+
+.instrument-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+  box-shadow: inset 3px 3px 2px 0 rgba(0, 0, 0, 0.2),
+    inset -2px -2px 2px 0 rgba(255, 255, 255, 0.5);
+}
+
+.instrument-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05) rotate(30deg);
+}
+
+.instrument-btn.active {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35) inset,
+    0 0 12px rgba(76, 201, 240, 0.6);
+  background: rgba(76, 201, 240, 0.25);
+}
+
 body {
   font-family: "Segoe UI", Tahoma, Verdana, sans-serif, Times;
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
@@ -593,11 +630,18 @@ body.light-theme .instructions {
 }
 
 body.light-theme .settings-btn,
-body.light-theme .theme-toggle {
+body.light-theme .theme-toggle,
+body.light-theme .instrument-btn {
   color: white;
   background: rgba(255, 255, 255, 0.1);
   box-shadow: inset 3px 3px 2px 0 rgba(21, 21, 21, 0.2),
     inset -2px -2px 2px 0 rgba(255, 255, 255, 0.5);
+}
+
+body.light-theme .instrument-btn.active {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25) inset,
+    0 0 10px rgba(76, 201, 240, 0.4);
+  background: rgba(76, 201, 240, 0.2);
 }
 
 .settings-btn:hover {
@@ -606,7 +650,8 @@ body.light-theme .theme-toggle {
 }
 
 body.light-theme .settings-btn:hover,
-body.light-theme .theme-toggle:hover {
+body.light-theme .theme-toggle:hover,
+body.light-theme .instrument-btn:hover {
   background: rgba(255, 255, 255, 0.2);
 }
 
