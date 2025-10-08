@@ -125,6 +125,37 @@
             </select>
           </div>
         </div>
+        <!-- Custom Keyboard Controls feedback response-->
+        <div class="setting-section" id="customKeymapSection">
+          <div class="setting-item">
+            <span>Custom Keyboard Controls</span>
+            <label class="switch">
+              <input type="checkbox" id="showCustomKeymap" />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div
+            id="keyboardMappingPanel"
+            class="keyboard-mapping-panel"
+            style="display: none"
+          >
+            <div class="keyboard-mapping-header">
+              <span>Map keys to notes:</span>
+              <button
+                id="resetKeymap"
+                class="reset-keymap-btn"
+                title="Reset to default"
+              >
+                Reset to Default
+              </button>
+            </div>
+            <div
+              id="keyboardMappingList"
+              class="keyboard-mapping-list"
+              aria-live="polite"
+            ></div>
+          </div>
+        </div>
       </div>
     </div>
 

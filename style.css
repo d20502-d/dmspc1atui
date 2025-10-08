@@ -72,6 +72,10 @@ h1 {
   font-weight: 600;
 }
 
+footer {
+  font-size: 0.9rem;
+}
+
 .keyboard {
   display: grid;
   grid-template-columns: repeat(5, 115px);
@@ -440,6 +444,123 @@ h1 {
   overflow-y: auto;
 }
 
+/* Custom Keyboard Controls */
+.keyboard-mapping-panel {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.keyboard-mapping-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.keyboard-mapping-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 16px;
+}
+
+.keyboard-mapping-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.053);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: white;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.122);
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 1px 1px 3px 0 rgba(0, 0, 0, 0.2),
+    inset -1px -1px 3px 0 rgba(255, 255, 255, 0.5);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mapping-note {
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.mapping-input {
+  width: 56px;
+  height: 34px;
+  text-align: center;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+  font-size: 1rem;
+}
+
+.mapping-input:focus {
+  outline: none;
+  border-color: #4cc9f0;
+  box-shadow: 0 0 0 2px rgba(76, 201, 240, 0.35);
+}
+
+.reset-keymap-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: white;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.394);
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 2px 2px 6px 0 rgba(0, 0, 0, 0.2),
+    inset -2px -2px 6px 0 rgba(255, 255, 255, 0.5);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.reset-keymap-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: white;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  background: rgba(255, 251, 251, 0.987);
+  background-color: rgba(255, 255, 255, 0.391);
+  background-color: #4ccaf0;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.35),
+    inset 2px 2px 6px 0 rgba(0, 0, 0, 0.2),
+    inset -2px -2px 6px 0 rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 480px) {
+  .keyboard-mapping-list {
+    grid-template-columns: 1fr;
+  }
+}
+
 .setting-item {
   display: flex;
   justify-content: space-between;
@@ -661,6 +782,26 @@ body.light-theme .settings-panel {
   border: 1px solid rgba(239, 231, 231, 0.1);
   box-shadow: inset 3px 3px 4px 0 rgba(0, 0, 0, 0.2),
     inset -2px -2px 4px 0 rgba(255, 255, 255, 0.5);
+}
+
+body.light-theme .keyboard-mapping-row {
+  background: rgba(156, 156, 156, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .mapping-input {
+  background: rgba(43, 43, 43, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+body.light-theme .mapping-input:focus {
+  border-color: #4cc9f0;
+  box-shadow: 0 0 0 2px rgba(76, 201, 240, 0.25);
+}
+
+body.light-theme .reset-keymap-btn:hover {
+  background-color: rgba(255, 255, 255, 0.148);
+  background-color: #4ccaf0;
 }
 
 body.light-theme .settings-header {

@@ -1,6 +1,32 @@
 // Audio context and note map
 let audioContext;
 let currentInstrument = "piano"; // 'piano' | 'marimba'
+// Track pressed keyboard keys globally to avoid scope errors
+const keyboardActiveKeys = new Set();
+// Default keyboard mapping (key -> note): qwertasdfgzxcvb
+const DEFAULT_KEYMAP = {
+  // First row (C4-G4)
+  q: "C4",
+  w: "D4",
+  e: "E4",
+  r: "F4",
+  t: "G4",
+  // Second row (A4-E5)
+  a: "A4",
+  s: "B4",
+  d: "C5",
+  f: "D5",
+  g: "E5",
+  // Third row (F5-C6)
+  z: "F5",
+  x: "G5",
+  c: "A5",
+  v: "B5",
+  b: "C6",
+};
+
+// Active key map in use (key -> note)
+let keyMap = {};
 const noteMap = {
   C4: 0,
   D4: 1,
@@ -24,12 +50,20 @@ function initAudio() {
   if (!audioContext) {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
   }
+  if (audioContext.state === "suspended") {
+    audioContext.resume().catch(() => {});
+  }
 }
+//1111111111
 
 // Play note function
 function playNote(note) {
   if (!audioContext) initAudio();
-
+  if (audioContext.state === "suspended") {
+    try {
+      audioContext.resume();
+    } catch (e) {}
+  }
   const noteIndex = noteMap[note];
   if (noteIndex === undefined) return;
 
@@ -88,6 +122,7 @@ function playNote(note) {
   const now = audioContext.currentTime;
   oscillator.frequency.setValueAtTime(frequency, now);
 
+  // Instrument-specific waveform and envelope
   if (currentInstrument === "marimba") {
     oscillator.type = "sine";
     gainNode.gain.setValueAtTime(0, now); // Start at 0 gain
@@ -121,6 +156,143 @@ function playNote(note) {
     gainNode.gain.exponentialRampToValueAtTime(0.0001, t + 0.08);
     oscillator.stop(t + 0.09);
   };
+}
+
+//------111111111
+// ========== Custom Keyboard Mapping ==========
+function initKeymap() {
+  const saved = localStorage.getItem("customKeyMap");
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      keyMap = sanitizeKeymap(parsed);
+    } catch (e) {
+      keyMap = { ...DEFAULT_KEYMAP };
+    }
+  } else {
+    keyMap = { ...DEFAULT_KEYMAP };
+  }
+  renderKeyboardMappingUI();
+}
+
+function sanitizeKeymap(map) {
+  const sanitized = {};
+  Object.entries(map || {}).forEach(([k, n]) => {
+    if (typeof k === "string" && k.length === 1 && allNotes.includes(n)) {
+      sanitized[k.toLowerCase()] = n;
+    }
+  });
+  // Ensure defaults exist for any missing notes
+  const usedNotes = new Set(Object.values(sanitized));
+  Object.entries(DEFAULT_KEYMAP).forEach(([k, n]) => {
+    if (!usedNotes.has(n)) sanitized[k] = n;
+  });
+  return sanitized;
+}
+
+function saveKeymap() {
+  localStorage.setItem("customKeyMap", JSON.stringify(keyMap));
+}
+
+function resetKeymap() {
+  keyMap = { ...DEFAULT_KEYMAP };
+  saveKeymap();
+  renderKeyboardMappingUI();
+  updateKeyboardShortcutLabels();
+}
+
+function buildNoteToKeyMap() {
+  const rev = {};
+  Object.entries(keyMap).forEach(([k, n]) => {
+    rev[n] = k.toUpperCase();
+  });
+  return rev;
+}
+
+function renderKeyboardMappingUI() {
+  const list = document.getElementById("keyboardMappingList");
+  const resetBtn = document.getElementById("resetKeymap");
+  if (!list) return;
+
+  list.innerHTML = "";
+  const noteToKey = buildNoteToKeyMap();
+
+  allNotes.forEach((note) => {
+    const row = document.createElement("div");
+    row.className = "keyboard-mapping-row";
+
+    const label = document.createElement("span");
+    label.className = "mapping-note";
+    label.textContent = note;
+
+    const input = document.createElement("input");
+    input.className = "mapping-input";
+    input.type = "text";
+    input.maxLength = 1;
+    input.value = (noteToKey[note] || "").toLowerCase();
+    input.setAttribute("data-note", note);
+    input.autocomplete = "off";
+    input.spellcheck = false;
+
+    input.addEventListener("keydown", (e) => {
+      e.preventDefault();
+      const k = e.key.length === 1 ? e.key.toLowerCase() : "";
+      if (!k) return;
+      assignKeyToNote(k, note);
+      input.value = k;
+      syncMappingInputs(list);
+      saveKeymap();
+      updateKeyboardShortcutLabels();
+    });
+
+    input.addEventListener("input", () => {
+      const k = input.value.toLowerCase();
+      if (k.length === 0) {
+        removeKeyForNote(note);
+        saveKeymap();
+        updateKeyboardShortcutLabels();
+      }
+    });
+
+    row.appendChild(label);
+    row.appendChild(input);
+    list.appendChild(row);
+  });
+
+  if (resetBtn) {
+    resetBtn.onclick = (e) => {
+      e.preventDefault();
+      resetKeymap();
+    };
+  }
+}
+
+function assignKeyToNote(k, note) {
+  // Remove existing mapping for this key
+  Object.keys(keyMap).forEach((existingKey) => {
+    if (existingKey === k && keyMap[existingKey] !== note) {
+      delete keyMap[existingKey];
+    }
+  });
+  // Remove any other key mapped to this note
+  Object.entries(keyMap).forEach(([ek, n]) => {
+    if (n === note && ek !== k) delete keyMap[ek];
+  });
+  keyMap[k] = note;
+}
+
+function removeKeyForNote(note) {
+  Object.entries(keyMap).forEach(([k, n]) => {
+    if (n === note) delete keyMap[k];
+  });
+}
+
+function syncMappingInputs(container) {
+  const noteToKey = buildNoteToKeyMap();
+  container.querySelectorAll(".mapping-input").forEach((input) => {
+    const note = input.getAttribute("data-note");
+    input.value = (noteToKey[note] || "").toLowerCase();
+  });
 }
 
 // Track active notes
@@ -212,6 +384,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize audio on first interaction
   const initOnInteraction = () => {
     initAudio();
+    // attempt resume again explicitly on first interaction
+    if (audioContext && audioContext.state === "suspended") {
+      audioContext.resume().catch(() => {});
+    }
+
     document.removeEventListener("click", initOnInteraction);
     document.removeEventListener("keydown", initOnInteraction);
   };
@@ -287,6 +464,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Add keyboard event listeners
+  // Initialize keymap (load from storage and set up events/UI)
+  initKeymap();
   setupKeyboardControls();
 
   // Visual feedback for active keys
@@ -297,6 +476,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Add note labels and keyboard shortcuts (visibility will be controlled by settings)
   addNoteLabels();
+
+  // Ensure shortcut labels reflect current mapping
+  updateKeyboardShortcutLabels();
+
+  // Collapsible: Custom Keyboard Controls
+  const toggleKeymapSection = document.getElementById("toggleKeymapSection");
+  const keyboardMappingPanel = document.getElementById("keyboardMappingPanel");
+  const caret = toggleKeymapSection?.querySelector(".section-caret");
+
+  function setKeymapSection(open) {
+    if (!toggleKeymapSection || !keyboardMappingPanel) return;
+    keyboardMappingPanel.style.display = open ? "block" : "none";
+    toggleKeymapSection.setAttribute("aria-expanded", String(open));
+    if (caret) caret.textContent = open ? "▾" : "▸";
+    if (open) {
+      // render ensure latest mapping
+      renderKeyboardMappingUI();
+    }
+  }
+
+  if (toggleKeymapSection && keyboardMappingPanel) {
+    setKeymapSection(false);
+    toggleKeymapSection.addEventListener("click", (e) => {
+      e.preventDefault();
+      const isOpen = keyboardMappingPanel.style.display !== "none";
+      setKeymapSection(!isOpen);
+    });
+    toggleKeymapSection.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        const isOpen = keyboardMappingPanel.style.display !== "none";
+        setKeymapSection(!isOpen);
+      }
+    });
+  }
 
   // Set up settings panel toggle
   const settingsBtn = document.getElementById("settingsBtn");
@@ -473,6 +687,8 @@ function initSettings() {
   const metronomeControls = document.getElementById("metronomeControls");
   const bpmSlider = document.getElementById("bpm");
   const bpmValue = document.getElementById("bpmValue");
+  const showCustomKeymap = document.getElementById("showCustomKeymap");
+  const keyboardMappingPanel = document.getElementById("keyboardMappingPanel");
 
   // Load saved settings or use defaults
   const settings = JSON.parse(localStorage.getItem("pianoSettings")) || {
@@ -481,6 +697,7 @@ function initSettings() {
     enableMetronome: false,
     bpm: 120,
     timeSignature: "4",
+    showCustomKeymap: false,
   };
 
   // Apply saved settings
@@ -490,6 +707,14 @@ function initSettings() {
   bpmSlider.value = settings.bpm;
   bpmValue.textContent = settings.bpm;
   document.getElementById("timeSignature").value = settings.timeSignature;
+  if (showCustomKeymap && keyboardMappingPanel) {
+    showCustomKeymap.addEventListener("change", (e) => {
+      const open = e.target.checked;
+      keyboardMappingPanel.style.display = open ? "block" : "none";
+      if (open) renderKeyboardMappingUI();
+      saveSettings();
+    });
+  }
 
   // Toggle metronome controls
   metronomeControls.style.display = settings.enableMetronome ? "block" : "none";
@@ -546,29 +771,8 @@ function initSettings() {
 // Add note labels to keys
 function addNoteLabels() {
   const keys = document.querySelectorAll(".key");
-  const keyMap = {
-    q: "C4",
-    w: "D4",
-    e: "E4",
-    r: "F4",
-    t: "G4",
-    a: "A4",
-    s: "B4",
-    d: "C5",
-    f: "D5",
-    g: "E5",
-    z: "F5",
-    x: "G5",
-    c: "A5",
-    v: "B5",
-    b: "C6",
-  };
-
-  // Find keyboard key for each note
-  const noteToKey = {};
-  Object.entries(keyMap).forEach(([key, note]) => {
-    noteToKey[note] = key.toUpperCase();
-  });
+  // Build note -> key lookup from current keyMap
+  const noteToKey = buildNoteToKeyMap();
 
   keys.forEach((key) => {
     const note = key.getAttribute("data-note");
@@ -598,6 +802,16 @@ function updateNoteLabels(show) {
 function updateKeyboardShortcuts(show) {
   document.querySelectorAll(".keyboard-shortcut").forEach((shortcut) => {
     shortcut.style.display = show ? "block" : "none";
+  });
+}
+
+// Update only the shortcut label characters to reflect current mapping
+function updateKeyboardShortcutLabels() {
+  const noteToKey = buildNoteToKeyMap();
+  document.querySelectorAll(".key").forEach((keyEl) => {
+    const note = keyEl.getAttribute("data-note");
+    const label = keyEl.querySelector(".keyboard-shortcut");
+    if (label) label.textContent = (noteToKey[note] || "").toUpperCase();
   });
 }
 
@@ -788,109 +1002,109 @@ function handleVisibilityChange() {
         activeNotes.delete(key);
       }
     });
-    activeKeys.clear();
+    keyboardActiveKeys.clear();
   }
 }
 
-// Setup keyboard controls with qwertasdfgzxcvb mapping
-function setupKeyboardControls() {
-  // Map keyboard keys to musical notes
-  const keyMap = {
-    // First row (C4-G4)
-    q: "C4",
-    w: "D4",
-    e: "E4",
-    r: "F4",
-    t: "G4",
-    // Second row (A4-E5)
-    a: "A4",
-    s: "B4",
-    d: "C5",
-    f: "D5",
-    g: "E5",
-    // Third row (F5-C6)
-    z: "F5",
-    x: "G5",
-    c: "A5",
-    v: "B5",
-    b: "C6",
-  };
+// Setup keyboard controls
+function setupKeyboardControls() {}
 
-  // Track currently pressed keys to prevent repeats
-  const activeKeys = new Set();
+// Track currently pressed keys to prevent repeats
+const activeKeys = keyboardActiveKeys;
 
-  // Handle keydown events
-  document.addEventListener("keydown", (e) => {
-    const key = e.key.toLowerCase();
+// Handle keydown events
+document.addEventListener("keydown", (e) => {
+  // Ignore typing inside inputs/textarea/contenteditable (e.g., mapping fields)
+  const target = e.target;
+  if (
+    target &&
+    (target.tagName === "INPUT" ||
+      target.tagName === "TEXTAREA" ||
+      target.isContentEditable)
+  ) {
+    return;
+  }
+  const key = e.key.toLowerCase();
 
-    // Handle Shift+S for settings
-    if (key === "s" && e.shiftKey) {
-      e.preventDefault();
-      const settingsPanel = document.getElementById("settingsPanel");
-      if (settingsPanel) {
-        settingsPanel.classList.toggle("active");
-      }
-      return;
+  // Handle Shift+S for settings
+  if (key === "s" && e.shiftKey) {
+    e.preventDefault();
+    const settingsPanel = document.getElementById("settingsPanel");
+    if (settingsPanel) {
+      settingsPanel.classList.toggle("active");
     }
+    return;
+  }
 
-    // Handle note keys
-    const note = keyMap[key];
-    if (note && !activeKeys.has(key)) {
-      e.preventDefault();
-      activeKeys.add(key);
-      const keyElement = document.querySelector(`.key[data-note="${note}"]`);
-      if (keyElement) {
-        keyElement.classList.add("active");
-        const stopNote = playNote(note);
-        if (stopNote) {
-          activeNotes.set(key, stopNote);
-        }
+  // Handle note keys
+  const note = keyMap[key];
+  if (note && !activeKeys.has(key)) {
+    e.preventDefault();
+    activeKeys.add(key);
+    const keyElement = document.querySelector(`.key[data-note="${note}"]`);
+    if (keyElement) {
+      keyElement.classList.add("active");
+      const stopNote = playNote(note);
+      if (stopNote) {
+        activeNotes.set(key, stopNote);
       }
     }
-  });
+  }
+});
 
-  // Handle keyup events
-  document.addEventListener("keyup", (e) => {
-    const key = e.key.toLowerCase();
+// Handle keyup events
+document.addEventListener("keyup", (e) => {
+  // Ignore typing inside inputs/textarea/contenteditable
+  const target = e.target;
+  if (
+    target &&
+    (target.tagName === "INPUT" ||
+      target.tagName === "TEXTAREA" ||
+      target.isContentEditable)
+  ) {
+    return;
+  }
+
+  const key = e.key.toLowerCase();
+  const note = keyMap[key];
+
+  if (note && activeKeys.has(key)) {
+    e.preventDefault();
+    activeKeys.delete(key);
+
+    const keyElement = document.querySelector(`.key[data-note="${note}"]`);
+    if (keyElement) {
+      keyElement.classList.remove("active");
+      const stopNote = activeNotes.get(key);
+      if (stopNote) {
+        stopNote();
+        activeNotes.delete(key);
+      }
+    }
+  }
+});
+
+// Handle window blur to clean up stuck keys
+window.addEventListener("blur", () => {
+  activeKeys.forEach((key) => {
     const note = keyMap[key];
-
-    if (note && activeKeys.has(key)) {
-      e.preventDefault();
-      activeKeys.delete(key);
-
+    if (note) {
       const keyElement = document.querySelector(`.key[data-note="${note}"]`);
       if (keyElement) {
         keyElement.classList.remove("active");
-        const stopNote = activeNotes.get(key);
-        if (stopNote) {
-          stopNote();
-          activeNotes.delete(key);
-        }
       }
     }
   });
+  activeKeys.clear();
+});
 
-  // Handle window blur to clean up stuck keys
-  window.addEventListener("blur", () => {
-    activeKeys.forEach((key) => {
-      const note = keyMap[key];
-      if (note) {
-        const keyElement = document.querySelector(`.key[data-note="${note}"]`);
-        if (keyElement) {
-          keyElement.classList.remove("active");
-        }
-      }
-    });
-    activeKeys.clear();
-  });
-
-  // Close settings with Escape
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      const settingsPanel = document.getElementById("settingsPanel");
-      if (settingsPanel?.classList.contains("active")) {
-        settingsPanel.classList.remove("active");
-      }
+// Close settings with Escape
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    const settingsPanel = document.getElementById("settingsPanel");
+    if (settingsPanel?.classList.contains("active")) {
+      settingsPanel.classList.remove("active");
     }
-  });
-}
+  }
+});
+//}
