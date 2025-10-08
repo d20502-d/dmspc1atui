@@ -845,7 +845,7 @@ function playMetronomeTick(isFirstBeat) {
 
   // Create a short beep
   gainNode.gain.setValueAtTime(0.5, now);
-  gainNode.gain.exponentialRampToValueAtTime(0.001, now + duration);
+  gainNode.gain.exponentialRampToValueAtTime(0.00001, now + duration);
 }
 
 async function startMetronome() {
@@ -925,7 +925,7 @@ function stopMetronome() {
     const now = metronomeAudioContext.currentTime;
     gainNode.gain.cancelScheduledValues(now);
     gainNode.gain.setValueAtTime(gainNode.gain.value, now);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+    gainNode.gain.exponentialRampToValueAtTime(0, now + 0.1);
   }
 }
 
