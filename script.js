@@ -54,7 +54,6 @@ function initAudio() {
     audioContext.resume().catch(() => {});
   }
 }
-//1111111111
 
 // Play note function
 function playNote(note) {
@@ -89,34 +88,7 @@ function playNote(note) {
     987.77,
     1046.5, // F5 to C6
   ];
-
   const frequency = frequencies[noteIndex];
-
-  // Configure oscillator
-  //oscillator.type = "sine";
-  //oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
-
-  // Configure gain for smooth envelope
-  //gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-  //gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.03);
-
-  //.............1 try
-  // Configure oscillator and envelope by instrument
-  //const now = audioContext.currentTime;
-  //oscillator.frequency.setValueAtTime(frequency, now);
-
-  //if (currentInstrument === "marimba") {
-  // Percussive, woody: short attack, fast decay
-  //oscillator.type = "triangle";
-  //gainNode.gain.setValueAtTime(0, now);
-  //gainNode.gain.linearRampToValueAtTime(0.6, now + 0.005); // very fast attack
-  //gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.25); // fast decay
-  //} else {
-  // Piano-like: gentle attack, medium decay
-  //oscillator.type = "sine";
-  //gainNode.gain.setValueAtTime(0, now);
-  //gainNode.gain.linearRampToValueAtTime(0.3, now + 0.03);
-  //}
 
   // Configure oscillator and envelope by instrument
   const now = audioContext.currentTime;
@@ -144,11 +116,6 @@ function playNote(note) {
 
   // Return stop function
   return () => {
-    //gainNode.gain.cancelScheduledValues(audioContext.currentTime);
-    //gainNode.gain.setValueAtTime(gainNode.gain.value, audioContext.currentTime);
-    //gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.1);
-
-    //oscillator.stop(audioContext.currentTime + 0.1);
     const t = audioContext.currentTime;
     gainNode.gain.cancelScheduledValues(t);
     gainNode.gain.setValueAtTime(Math.max(gainNode.gain.value, 0.0001), t);
@@ -158,7 +125,6 @@ function playNote(note) {
   };
 }
 
-//------111111111
 // ========== Custom Keyboard Mapping ==========
 function initKeymap() {
   const saved = localStorage.getItem("customKeyMap");
