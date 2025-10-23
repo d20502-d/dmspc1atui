@@ -1,21 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DMSPC1 AT3</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DMSPC1_AT3_Te-Yi,Hsu</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>Assessment Task 3 - Final UI</h1>
+    <section>
+      <h3>Prototype live link:</h3>
+      <ul>
+        <li>
+          <a href="https://dmspc1ui.netlify.app/prototype"
+            >https://dmspc1ui.netlify.app/prototype</a
+          >
+        </li>
+      </ul>
+      <h3>Final UI live link:</h3>
+      <ul>
+        <li>
+          <a href="https://dmspc1ui.netlify.app"
+            >https://dmspc1ui.netlify.app</a
+          >
+        </li>
+      </ul>
+      <h3>Link to code repositories:</h3>
+      <ul>
+        <li>
+          <a href="https://github.com/d20502-d/dmspc1atui/tree/main"
+            >https://github.com/d20502-d/dmspc1atui/tree/main</a
+          >
+        </li>
+      </ul>
+      <!-- https://dmspc1ui.netlify.app/dmspc1at3 -->
+    </section>
+    <section>
+      <br />
+      <h2>Reflection:</h2>
+      <br />
+      <li>
+        <b
+          >Your design's guiding values and how they were embodied in the UI.</b
+        >
+      </li>
+      <p>
+        My design's guiding values were simplicity, clarity, and
+        user-friendliness. I aimed to create a clean and intuitive interface
+        that allows users to navigate easily and find information quickly. The
+        use of a minimalist color scheme and straightforward layout helped
+        embody these values in the UI.
+      </p>
+      <ul>
+        <li>Immersion and Flow:</li>
+        <p>
+          The UI prioritizes a clean, uncluttered interface that focuses user
+          attention on the central instrument grid, fostering a sense of
+          immersion through subtle tactile animations and glowing feedback
+          effects. This design choice ensures the interactions are responsive
+          and engaging.
+        </p>
+        <li>Learnability and Progressive Disclosure:</li>
+        <p>
+          For learnability, the UI incorporates optional overlays for note names
+          and keyboard shortcuts. It allows users to access guidance without
+          overwhelming the interface, while experienced users can also disable
+          them for a better experience. There's also visual cues, such as
+          diamond borders to differentiated octave starts. This help users build
+          spatial memory across the grid, making the layout progressively more
+          intuitive as they interact.
+        </p>
+        <li>Customization and Accessibility:</li>
+        <p>
+          The design emphasizes user control through a customizable keymap
+          system, enabling personalized input mappings. Keyboard navigation
+          includes shortcuts like Shift+S for settings and Escape to close
+          panels.
+        </p>
+      </ul>
 
-    <a href=https://dmspc1ui.netlify.app/prototype> prototype </a>
-    <br>
-    <a href=https://dmspc1ui.netlify.app> final UI </a>
-    <br>
-    <a href=https://github.com/d20502-d/dmspc1atui/tree/main> repository </a>
-    <br>
+      <li>
+        <b>Any significant changes since your work in progress milestone.</b>
+      </li>
+      <p>
+        Since my work in progress milestone, I made several significant changes
+        to improve the overall user experience. I got insipired from Apple's
+        Liquid Ui and changed my buttons to enhance visual appeal and
+        accessibility. I also added more interactive elements to engage users
+        and provide a more dynamic experience. Moreover, I added a full custom
+        key mapping editor. This idea came from the feedback I recevied,
+        recognizing the importance of personalization. This change successfully
+        improved accessibility but it also requires many modifications to my
+        code.
+      </p>
 
-    https://dmspc1ui.netlify.app/dmspc1at3
+      <li>
+        <b
+          >Your navigation of the production timeline and how you spent your
+          development time.
+        </b>
+      </li>
+      <p>
+        The production timeline can be divided into four phases. Phase 1 focused
+        on the core prototype, building the grid and the basic settings panels.
+        Phase 2 involved UI iterations, using the idea of Liquid UI and also
+        implement the light and dark mode. Phase 3 include UX iterations, such
+        as adding more features to the settings panel. Add new features that was
+        inspired from the feedback such as customize keyboard control and
+        switching instruments. Phase 4 is fixing the bugs such as the metronome
+        cannot stop after playing and other small errors.
+      </p>
 
-    
-</body>
+      <li><b>The design aspect that you are most proud of. </b></li>
+      <p>
+        The custom keymap system with live label synchronization stands out as
+        the aspect I'm most proud of. It creates a seamless, end-to-end user
+        experience; from editing mappings in the "#keyboardMappingPanel",
+        sanitizing inputs to prevent conflicts "sanitizeKeymap()", saving to
+        "localStorage", and instantly reflecting changes on the keys
+        "updateKeyboardShortcutLabels()". This feature not only increases
+        personalization and accessibility, but also provides powerful
+        performance, giving users more autonomy while maintaining reasonable
+        default settings. It elevates the UI from a simple tool to an adaptable
+        instrument, and implementing the conflict resolution logic was
+        particularly satisfying as it ensured reliability without compromising
+        usability.
+      </p>
+
+      <li><b>The design aspect you found most challenging.</b></li>
+      <p>
+        The most challenging part of this assignment was the aesthetics,
+        particularly the liquid glass UI. At first I didn't thought that it will
+        be hard to code. However, I found it challenging as I cannot write out
+        the code that really acts like the liquid glass. I could only try to
+        recreate its appearance as closely as possible which I felt quite upset
+        because it doesn't feel as transparrent as the liquid glass UI should
+        be.
+      </p>
+    </section>
+  </body>
 </html>
